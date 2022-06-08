@@ -2,18 +2,20 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Biens;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
-    #[Route('/home', name: 'app_home')]
-    public function index(): Response
+    #[Route('/', name: 'app_home')]
+    public function index(ManagerRegistry $doctrine): Response
     {
+        $biens = $doctrine->getRepository(Biens::class)->findAll();
         return $this->render('home/index.html.twig', [
-            'controller_name' => 'Madame',
-            'controller_age' => '9',
+            'biens' => $biens 
         ]);
     }
 }
