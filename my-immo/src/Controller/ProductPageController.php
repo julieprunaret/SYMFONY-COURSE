@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ProductPageController extends AbstractController
 {
@@ -28,12 +29,14 @@ class ProductPageController extends AbstractController
         ]);
     }
 
+
+    //CREATE
     #[Route('/bien/add', name: 'add_product')] 
     /* 
     *le premier url est celui que l'on défini pour la page concernée.
     *le name est le nom que l'on donne à la page (son id, qui sera dans le path des liens)
     */
-    public function add(Request $request, ManagerRegistry $doctrine)
+    public function add(Request $request, ManagerRegistry $doctrine): Response
     {
         
         $bien = new Biens();//etape 1 : à la création, on instancie une objet vide
@@ -89,4 +92,62 @@ class ProductPageController extends AbstractController
         // ]);
 
     }
+
+
+    //UPDATE
+    #[Route('/bien/edit/{id}', name: 'edit_product')] 
+    public function edit($id, ManagerRegistry $doctrine, Request $request): Response
+    {
+        //ETAPE 1) : récupérer le bien à modifier
+        //comme pour le détail, on va chercher l'objet concerné
+        $bien = $doctrine->getRepository(Biens::class)->find($id);
+        $bien->setUpdatedAt(new DateTime());//on ajoute la valeur de l'update en auto comme on a fais avec la création
+
+        //ETAPE 2) : créer le formulaire
+        $formBien = $this->createForm(FormBienType::class, $bien);//On appelle notre formulaire
+        $formBien->handleRequest($request);
+        if($formBien->isSubmitted() && $formBien->isValid())
+        {
+            //à chaque fois qu'on touche à la bdd on appelle la doctrine ()
+            //en mettant dans le if, l'appel s'execute seulement quand on en a besoin, écoconception ++
+            $entityManager = $doctrine->getManager();
+
+           //on ne fait pas de persist dans la modification! c'est propre à la création, ici le flush suffit
+            $entityManager->flush();
+
+            $this->addFlash(
+                'success_edit', 
+                'Le bien a été modifié !'
+            );
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('product_page/form-edit.html.twig',  [ 
+            'formBien' => $formBien->createView()
+        ]);
+    }
+
+
+        //DELETE
+        #[Route('/bien/delete/{id}', name: 'delete_product')] 
+        public function delete($id, ManagerRegistry $doctrine) : RedirectResponse
+        {
+            //ETAPE 1) : récupérer le bien à modifier
+            //comme pour le détail, on va chercher l'objet concerné
+            $bien = $doctrine->getRepository(Biens::class)->find($id);
+
+
+            //attention! il ne faut pas oublier de demander une confirmation (voir coté front avec le onclick)
+            $entityManager = $doctrine->getManager();
+            $entityManager->remove($bien);
+            $entityManager->flush();
+    
+            $this->addFlash(
+                'success_delete', 
+                'Le bien "'. $bien->getTitle() .'" a été suprimé !'
+            );
+            return $this->redirectToRoute('app_home');
+        }
+    
+        
 }

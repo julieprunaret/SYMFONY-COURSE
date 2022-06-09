@@ -2,15 +2,29 @@
 {% block title %}Nos produits{% endblock %}
 {% block body %}
 	<section class="py-5">
+		<div class="container px-4 px-lg-5 mt-5">
 	{# message add flash à l'ajout d'un bien #}
 		{% for message in app.flashes('success_add') %}
 			<div class="alert alert-success alert-dismissible fade show" role="alert">
-				<strong>Félicitations!</strong> votre bien a bien été ajouté
+				{{ message }}
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
 		{% endfor %}
-		<div class="container px-4 px-lg-5 mt-5">
-		<a href="{{ path('add_product') }}" class="btn btn-warning">Ajouter un bien</a>
+	{# message add flash à la modification #}
+		{% for message in app.flashes('success_edit') %}
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		{% endfor %}
+	{# message add flash à la supression #}
+		{% for message in app.flashes('success_delete') %}
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		{% endfor %}
+		<a href="{{ path('add_product') }}" class="mb-3 btn btn-warning">Ajouter un bien</a>
 			{# {{ dump(biens) }} #}
 			<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 				{% for bien in biens %}

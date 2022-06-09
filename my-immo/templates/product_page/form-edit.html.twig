@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nouveau bien{% endblock %}
+{% block header %}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Modifier mon bien</h1>
+    {{ form_start(formBien) }}
+        {{ form_widget(formBien) }}
+        <button type="submit" class="btn btn-secondary">Mettre à jour</button>
+    {{ form_end(formBien) }}
+</div>
+{% endblock %}
