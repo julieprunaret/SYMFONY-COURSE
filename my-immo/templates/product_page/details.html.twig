@@ -14,11 +14,10 @@
                         </div>
                         <p class="lead">{{ bien.description }}</p>
                         <div class="d-flex">
-                            <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
                             <a class="btn btn-outline-dark flex-shrink-0" href="{{ path('app_home') }}">
-                                <i class="bi-cart-fill me-1"></i>
                                 Retour
                             </a>
+							<a href="{{ path('product', {id : bien.id }) }}" class="btn btn-link">Modifier</a>
                         </div>
                     </div>
                 </div>

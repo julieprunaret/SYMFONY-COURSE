@@ -1,5 +1,26 @@
 {% extends 'base.html.twig' %}
 {% block title %}Nouveau bien{% endblock %}
 {% block header %}{% endblock %}
+
 {% block body %}
+<div class="container">
+    <h1>Mon nouveau bien</h1>
+    {# le design est géré dans twig.yalm avec bootstrap #}
+
+
+    {#technique 1) on gère tout dans le controller, y compris de bouton submit 
+    {{ form(formBien) }}#}
+
+
+
+
+    {#technique 2) on gère tout en vue, donc bien plus personnalisable 
+    aide : https://symfony.com/doc/5.4/form/form_customization.html
+    on peut tout personnaliser
+    #}
+    {{ form_start(formBien) }}
+        {{ form_widget(formBien) }}
+        <button type="submit" class="btn btn-secondary">Envoyer</button>
+    {{ form_end(formBien) }}
+</div>
 {% endblock %}

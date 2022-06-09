@@ -2,6 +2,13 @@
 {% block title %}Nos produits{% endblock %}
 {% block body %}
 	<section class="py-5">
+	{# message add flash à l'ajout d'un bien #}
+		{% for message in app.flashes('success_add') %}
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>Félicitations!</strong> votre bien a bien été ajouté
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		{% endfor %}
 		<div class="container px-4 px-lg-5 mt-5">
 		<a href="{{ path('add_product') }}" class="btn btn-warning">Ajouter un bien</a>
 			{# {{ dump(biens) }} #}
